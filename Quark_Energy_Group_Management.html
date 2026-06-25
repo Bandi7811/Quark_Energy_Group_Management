@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quark Energy Group — Project Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green-900:#064E3B;
+  --green-800:#065F46;
+  --green-700:#047857;
+  --green-600:#059669;
+  --green-500:#10B981;
+  --green-400:#34D399;
+  --green-300:#6EE7B7;
+  --green-200:#A7F3D0;
+  --green-100:#D1FAE5;
+  --green-50:#ECFDF5;
+  --white:#FFFFFF;
+  --gray-50:#F8FAFC;
+  --gray-100:#F1F5F9;
+  --gray-200:#E2E8F0;
+  --gray-300:#CBD5E1;
+  --gray-400:#94A3B8;
+  --gray-500:#64748B;
+  --gray-600:#475569;
+  --gray-700:#334155;
+  --gray-800:#1E293B;
+  --gray-900:#0F172A;
+  --amber:#D97706;--amber-lt:#FFFBEB;--amber-md:#FDE68A;
+  --red:#DC2626;--red-lt:#FEF2F2;--red-md:#FECACA;
+  --blue:#2563EB;--blue-lt:#EFF6FF;--blue-md:#BFDBFE;
+  --sans:'Inter',sans-serif;
+  --shadow-sm:0 1px 3px rgba(5,150,105,.08),0 1px 2px rgba(0,0,0,.04);
+  --shadow:0 4px 12px rgba(5,150,105,.1),0 2px 4px rgba(0,0,0,.05);
+  --shadow-md:0 8px 24px rgba(5,150,105,.12),0 3px 8px rgba(0,0,0,.06);
+  --shadow-lg:0 16px 40px rgba(5,150,105,.15),0 6px 12px rgba(0,0,0,.08);
+}
+html,body{height:100%;background:var(--gray-50);color:var(--gray-900);font-family:var(--sans);font-size:13px;-webkit-font-smoothing:antialiased;}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:68px;
+  background:linear-gradient(135deg, var(--green-900) 0%, var(--green-800) 50%, var(--green-700) 100%);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;position:sticky;top:0;z-index:200;
+  border-bottom:3px solid var(--green-400);
+  box-shadow:0 2px 20px rgba(6,78,59,.5);
+}
+.brand{display:flex;align-items:center;gap:14px;}
+.brand-logo{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--white);
+  display:grid;place-items:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.2);
+  border:2px solid rgba(255,255,255,.3);
+  font-weight:900;font-size:8px;color:var(--green-700);letter-spacing:-.3px;
+  line-height:1.3;text-align:center;padding:3px;
+}
+.brand-text{color:var(--white);}
+.brand-name{font-size:18px;font-weight:900;letter-spacing:-.02em;}
+.brand-name span{color:rgba(255,255,255,.6);}
+.brand-sub{font-size:10px;color:rgba(255,255,255,.55);font-weight:500;margin-top:2px;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--green-300);background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);padding:4px 10px;border-radius:20px;}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--green-400);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.5);}50%{box-shadow:0 0 0 5px rgba(52,211,153,0);}}
+.user-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);border-radius:9px;padding:5px 12px 5px 7px;}
+.avatar{width:30px;height:30px;border-radius:7px;background:var(--green-600);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--white);}
+.user-name{font-size:12px;font-weight:600;color:var(--white);}
+.clock-display{font-size:11px;font-weight:600;color:rgba(255,255,255,.7);font-variant-numeric:tabular-nums;}
+.credit-badge{font-size:10px;color:rgba(255,255,255,.45);margin-left:4px;white-space:nowrap;}
+
+/* ── LAYOUT ── */
+.app-wrap{display:flex;height:calc(100vh - 68px);}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:245px;flex-shrink:0;
+  background:linear-gradient(180deg, var(--gray-800) 0%, var(--gray-900) 100%);
+  display:flex;flex-direction:column;
+  overflow-y:auto;border-right:1px solid rgba(255,255,255,.06);
+}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px;}
+.nav-section-label{
+  padding:16px 14px 6px;
+  font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--green-300);opacity:.8;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;cursor:pointer;
+  border-left:3px solid transparent;
+  transition:all .15s;color:rgba(255,255,255,.55);
+  font-size:12px;font-weight:500;
+}
+.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);}
+.nav-item.active{
+  background:rgba(16,185,129,.18);color:var(--green-300);
+  border-left-color:var(--green-400);
+}
+.nav-item svg{width:15px;height:15px;stroke:currentColor;flex-shrink:0;}
+.nav-count{margin-left:auto;font-size:10px;font-weight:700;background:rgba(16,185,129,.25);color:var(--green-300);padding:2px 7px;border-radius:10px;}
+.nav-divider{height:1px;background:rgba(255,255,255,.06);margin:6px 0;}
+.sidebar-footer{margin-top:auto;padding:14px;font-size:9px;color:rgba(255,255,255,.25);text-align:center;border-top:1px solid rgba(255,255,255,.06);}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.page{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.page.active{display:flex;}
+
+/* ── PAGE HEADER ── */
+.page-header{
+  padding:18px 24px 14px;background:var(--white);
+  border-bottom:1px solid var(--gray-200);box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.page-title{font-size:17px;font-weight:800;color:var(--gray-900);letter-spacing:-.02em;}
+.page-sub{font-size:11px;color:var(--gray-400);margin-top:2px;}
+.header-actions{display:flex;align-items:center;gap:8px;}
+.btn-primary{
+  display:flex;align-items:center;gap:7px;
+  background:var(--green-600);color:var(--white);border:none;
+  border-radius:8px;padding:9px 18px;font-family:var(--sans);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(5,150,105,.35);
+}
+.btn-primary:hover{background:var(--green-700);box-shadow:0 4px 14px rgba(5,150,105,.45);}
+.btn-secondary{
+  display:flex;align-items:center;gap:7px;
+  background:var(--white);color:var(--gray-600);border:1.5px solid var(--gray-200);
+  border-radius:8px;padding:8px 15px;font-family:var(--sans);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-secondary:hover{border-color:var(--green-300);color:var(--green-600);background:var(--green-50);}
+.btn-secondary svg,.btn-primary svg{stroke:currentColor;width:14px;height:14px;}
+.btn-dark{
+  display:flex;align-items:center;gap:7px;
+  background:var(--gray-700);color:var(--white);border:none;
+  border-radius:8px;padding:9px 18px;font-family:var(--sans);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+.btn-dark:hover{background:var(--gray-800);}
+.btn-dark svg{stroke:currentColor;width:14px;height:14px;}
+
+/* ── PAGE BODY ── */
+.page-body{flex:1;overflow-y:auto;padding:20px 24px;}
+.page-body::-webkit-scrollbar{width:5px;}
+.page-body::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:5px;}
+
+/* ── KPI ── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.kpi-card{
+  background:var(--white);border:1px solid var(--gray-200);border-radius:12px;
+  padding:16px 18px;position:relative;overflow:hidden;box-shadow:var(--shadow-sm);
+  transition:box-shadow .2s,transform .2s;
+}
+.kpi-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc,var(--green-500));border-radius:12px 12px 0 0;}
+.kpi-card.green-acc{--acc:var(--green-500);}
+.kpi-card.gray{--acc:var(--gray-500);}
+.kpi-card.amber{--acc:var(--amber);}
+.kpi-card.blue{--acc:var(--blue);}
+.kpi-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;margin-bottom:10px;background:var(--green-50);border:1px solid var(--green-100);}
+.kpi-icon svg{stroke:var(--green-600);width:16px;height:16px;}
+.kpi-icon.gray{background:var(--gray-100);border-color:var(--gray-200);}
+.kpi-icon.gray svg{stroke:var(--gray-600);}
+.kpi-icon.amber{background:var(--amber-lt);border-color:var(--amber-md);}
+.kpi-icon.amber svg{stroke:var(--amber);}
+.kpi-icon.blue{background:var(--blue-lt);border-color:var(--blue-md);}
+.kpi-icon.blue svg{stroke:var(--blue);}
+.kpi-label{font-size:10px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.kpi-value{font-size:26px;font-weight:900;color:var(--gray-900);letter-spacing:-.03em;}
+.kpi-delta{font-size:10px;color:var(--green-600);font-weight:600;margin-top:3px;}
+.kpi-delta.neg{color:var(--red);}
+
+/* ── SECTION CARD ── */
+.section-card{
+  background:var(--white);border:1px solid var(--gray-200);border-radius:12px;
+  box-shadow:var(--shadow-sm);margin-bottom:18px;overflow:hidden;
+}
+.section-card-header{
+  padding:14px 18px;border-bottom:1px solid var(--gray-100);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.section-card-title{font-size:13px;font-weight:700;color:var(--gray-800);}
+.section-card-sub{font-size:11px;color:var(--gray-400);margin-top:1px;}
+.section-card-body{padding:16px 18px;}
+
+/* ── TWO / THREE COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{
+  font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--gray-500);padding:10px 14px;
+  background:var(--gray-50);border-bottom:2px solid var(--gray-200);text-align:left;
+}
+.data-table td{padding:11px 14px;border-bottom:1px solid var(--gray-100);font-size:12px;color:var(--gray-700);vertical-align:middle;}
+.data-table tbody tr:hover{background:var(--green-50);}
+.data-table tbody tr:last-child td{border-bottom:none;}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:20px;text-transform:uppercase;}
+.badge-green{background:var(--green-50);color:var(--green-700);border:1px solid var(--green-200);}
+.badge-gray{background:var(--gray-100);color:var(--gray-600);border:1px solid var(--gray-200);}
+.badge-amber{background:var(--amber-lt);color:var(--amber);border:1px solid var(--amber-md);}
+.badge-red{background:var(--red-lt);color:var(--red);border:1px solid var(--red-md);}
+.badge-blue{background:var(--blue-lt);color:var(--blue);border:1px solid var(--blue-md);}
+.badge-dark{background:var(--gray-800);color:var(--white);border:1px solid var(--gray-700);}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{background:var(--gray-100);border-radius:6px;height:7px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green-600),var(--green-400));transition:width .5s ease;}
+.progress-fill.gray{background:linear-gradient(90deg,var(--gray-600),var(--gray-400));}
+.progress-fill.amber{background:linear-gradient(90deg,var(--amber),#FCD34D);}
+
+/* ── FORM ELEMENTS ── */
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-500);}
+.form-input,.form-select,.form-textarea{
+  background:var(--white);border:1.5px solid var(--gray-200);border-radius:8px;
+  padding:9px 13px;font-family:var(--sans);font-size:12px;color:var(--gray-800);
+  outline:none;transition:border-color .2s,box-shadow .2s;width:100%;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green-400);box-shadow:0 0 0 3px rgba(5,150,105,.08);}
+.form-textarea{resize:vertical;min-height:80px;}
+.form-select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100% - 12px) center;}
+
+/* ── TABS ── */
+.tabs{display:flex;align-items:center;gap:2px;padding:4px;background:var(--gray-100);border-radius:10px;width:fit-content;}
+.tab-btn{padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;color:var(--gray-500);border:none;background:transparent;cursor:pointer;transition:all .15s;}
+.tab-btn.active{background:var(--white);color:var(--green-600);box-shadow:var(--shadow-sm);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* ── LIST ITEMS ── */
+.list-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--gray-100);transition:background .15s;cursor:pointer;}
+.list-item:hover{background:var(--green-50);}
+.list-item:last-child{border-bottom:none;}
+.list-icon{width:34px;height:34px;border-radius:9px;background:var(--green-50);border:1px solid var(--green-100);display:grid;place-items:center;flex-shrink:0;}
+.list-icon svg{stroke:var(--green-500);width:16px;height:16px;}
+.list-icon.gray{background:var(--gray-100);border-color:var(--gray-200);}
+.list-icon.gray svg{stroke:var(--gray-600);}
+.list-icon.amber{background:var(--amber-lt);border-color:var(--amber-md);}
+.list-icon.amber svg{stroke:var(--amber);}
+.list-body{flex:1;}
+.list-title{font-size:12px;font-weight:700;color:var(--gray-800);}
+.list-sub{font-size:11px;color:var(--gray-400);margin-top:2px;}
+.list-meta{margin-left:auto;text-align:right;flex-shrink:0;}
+
+/* ── ALERT ── */
+.alert-item{display:flex;align-items:flex-start;gap:12px;background:var(--green-50);border:1px solid var(--green-200);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.alert-item.amber{background:var(--amber-lt);border-color:var(--amber-md);}
+.alert-item.gray{background:var(--gray-50);border-color:var(--gray-200);}
+.alert-item.blue{background:var(--blue-lt);border-color:var(--blue-md);}
+.alert-icon{flex-shrink:0;margin-top:1px;}
+.alert-icon svg{stroke:var(--green-600);width:16px;height:16px;}
+.alert-item.amber .alert-icon svg{stroke:var(--amber);}
+.alert-item.gray .alert-icon svg{stroke:var(--gray-600);}
+.alert-item.blue .alert-icon svg{stroke:var(--blue);}
+.alert-title{font-size:12px;font-weight:700;color:var(--gray-800);}
+.alert-sub{font-size:11px;color:var(--gray-500);margin-top:2px;}
+
+/* ── TOAST ── */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{background:var(--gray-900);color:var(--white);padding:12px 18px;border-radius:10px;font-size:12px;font-weight:600;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;animation:slideIn .3s ease;max-width:300px;}
+.toast.success{background:var(--green-800);}
+.toast.error{background:#991B1B;}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;place-items:center;backdrop-filter:blur(3px);}
+.modal-overlay.open{display:grid;}
+.modal{background:var(--white);border-radius:16px;width:580px;max-width:95vw;max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);}
+.modal-header{padding:20px 22px 16px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:15px;font-weight:800;color:var(--gray-900);}
+.modal-close{width:30px;height:30px;border:none;background:var(--gray-100);border-radius:7px;cursor:pointer;display:grid;place-items:center;font-size:16px;color:var(--gray-500);}
+.modal-body{padding:20px 22px;overflow-y:auto;flex:1;}
+.modal-footer{padding:14px 22px 20px;border-top:1px solid var(--gray-100);display:flex;justify-content:flex-end;gap:8px;}
+
+/* ── ROLE CARD ── */
+.role-card{background:var(--white);border:1px solid var(--gray-200);border-radius:14px;box-shadow:var(--shadow-sm);overflow:hidden;transition:box-shadow .2s,transform .2s;}
+.role-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.role-card-header{padding:16px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--gray-100);}
+.role-card-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex-shrink:0;}
+.role-card-icon svg{width:20px;height:20px;}
+.role-card-title{font-size:14px;font-weight:800;color:var(--gray-900);}
+.role-card-tag{font-size:10px;font-weight:600;color:var(--gray-400);margin-top:2px;text-transform:uppercase;letter-spacing:.07em;}
+.role-card-body{padding:16px 20px;}
+.role-card-desc{font-size:12px;color:var(--gray-600);line-height:1.7;margin-bottom:14px;}
+.role-task-list{display:flex;flex-direction:column;gap:8px;}
+.role-task{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--gray-700);}
+.role-task-dot{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.role-card-footer{padding:12px 20px;background:var(--gray-50);border-top:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;}
+.role-stat{text-align:center;}
+.role-stat-val{font-size:18px;font-weight:900;color:var(--gray-900);}
+.role-stat-label{font-size:9px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin-top:1px;}
+
+/* ── EDITABLE AREA ── */
+.editable-area{
+  background:var(--gray-50);border:2px dashed var(--green-300);border-radius:10px;
+  padding:16px 18px;min-height:80px;position:relative;
+  transition:border-color .2s,background .2s;
+}
+.editable-area:hover{border-color:var(--green-500);background:var(--green-50);}
+.editable-area-label{
+  position:absolute;top:-10px;left:14px;
+  background:var(--white);padding:0 8px;
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--green-600);border:1px solid var(--green-200);border-radius:4px;
+}
+.editable-area-hint{font-size:11px;color:var(--gray-400);font-style:italic;margin-bottom:10px;}
+.entry-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.entry-item{display:flex;align-items:flex-start;gap:10px;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 13px;}
+.entry-item-dot{width:8px;height:8px;border-radius:50%;background:var(--green-500);margin-top:5px;flex-shrink:0;}
+.entry-item-text{font-size:12px;color:var(--gray-700);flex:1;}
+.entry-item-date{font-size:10px;color:var(--gray-400);margin-left:auto;flex-shrink:0;}
+.entry-item-del{background:none;border:none;cursor:pointer;color:var(--gray-300);font-size:14px;padding:0 2px;transition:color .15s;}
+.entry-item-del:hover{color:var(--green-500);}
+
+/* ── SOLAR TECH BADGES ── */
+.tech-badge{display:inline-flex;align-items:center;gap:5px;background:var(--green-50);border:1px solid var(--green-200);color:var(--green-700);font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;margin:3px 3px 3px 0;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .two-col,.three-col{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  .sidebar{display:none;}
+  .topbar{padding:0 14px;}
+  .brand-sub,.clock-display,.credit-badge{display:none;}
+  .kpi-row{grid-template-columns:1fr 1fr;gap:10px;}
+  .page-body{padding:14px 12px;}
+  .page-header{flex-wrap:wrap;gap:8px;padding:12px 14px;}
+  .form-grid,.form-grid-2{grid-template-columns:1fr;}
+  .modal{width:100%;max-width:100%;border-radius:16px 16px 0 0;margin:auto 0 0;}
+  .modal-overlay{align-items:flex-end;}
+  .toast-container{right:12px;left:12px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-logo">⚡<br>QUARK<br>ENERGY</div>
+    <div class="brand-text">
+      <div class="brand-name">Quark <span>Energy Group</span></div>
+      <div class="brand-sub">Green Energy Project Management System · Renewable Energy Solutions Taiwan</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="live-badge"><span class="pulse"></span>Live</div>
+    <div class="user-chip">
+      <div class="avatar">QE</div>
+      <span class="user-name">Project Team</span>
+    </div>
+    <div class="clock-display" id="clock">--:--</div>
+    <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:9px;padding:5px 12px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" width="12" height="12"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span style="font-size:11px;font-weight:700;color:var(--white);">Bandile Dlamini</span>
+      <span style="width:1px;height:12px;background:rgba(255,255,255,.2);"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--green-300)" stroke-width="2" width="12" height="12"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      <a href="tel:+886900167900" style="font-size:11px;font-weight:600;color:var(--green-300);text-decoration:none;">+886 900 167 900</a>
+    </div>
+  </div>
+</header>
+
+<div class="app-wrap">
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div style="height:3px;background:linear-gradient(90deg,var(--green-500) 60%,var(--gray-600) 40%);flex-shrink:0;"></div>
+  <div class="nav-section-label">Overview</div>
+  <div class="nav-item active" onclick="showPage('dashboard')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Dashboard
+  </div>
+
+  <div class="nav-divider"></div>
+  <div class="nav-section-label">Core Operations</div>
+
+  <div class="nav-item" onclick="showPage('page-cases')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+    Case Management
+    <span class="nav-count" id="nc-cases">0</span>
+  </div>
+
+  <div class="nav-item" onclick="showPage('page-market')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Market Analysis &amp; Quotation
+    <span class="nav-count" id="nc-market">0</span>
+  </div>
+
+  <div class="nav-item" onclick="showPage('page-briefings')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+    Business Briefings
+    <span class="nav-count" id="nc-briefings">0</span>
+  </div>
+
+  <div class="nav-item" onclick="showPage('page-reports')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    Business Reports
+    <span class="nav-count" id="nc-reports">0</span>
+  </div>
+
+  <div class="nav-item" onclick="showPage('page-inspections')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Site Inspections
+    <span class="nav-count" id="nc-inspections">0</span>
+  </div>
+
+  <div class="nav-divider"></div>
+  <div class="nav-section-label">Company</div>
+  <div class="nav-item" onclick="showPage('page-about')">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    About Quark Energy
+  </div>
+
+  <div class="sidebar-footer">Made by Bandile Dlamini · +886 900 167 900</div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ═══════════════════ DASHBOARD ═══════════════════ -->
+<div class="page active" id="page-dashboard">
+  <div class="page-header">
+    <div>
+      <div class="page-title">🌱 Quark Energy Group</div>
+      <div class="page-sub">Renewable Energy Project Management · Taiwan</div>
+    </div>
+    <div class="header-actions">
+      <span class="badge badge-gray" style="font-size:11px;padding:5px 12px;" id="dash-date"></span>
+      <button class="btn-primary" onclick="showPage('page-cases');openModal('modal-add-case')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Case
+      </button>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="kpi-row">
+      <div class="kpi-card green-acc">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
+        <div class="kpi-label">Active Cases</div>
+        <div class="kpi-value" id="kpi-cases">0</div>
+        <div class="kpi-delta">In progress</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <div class="kpi-label">Market Evaluations</div>
+        <div class="kpi-value" id="kpi-market">0</div>
+        <div class="kpi-delta">Pending review</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
+        <div class="kpi-label">Briefings Prepared</div>
+        <div class="kpi-value" id="kpi-briefings">0</div>
+        <div class="kpi-delta">This quarter</div>
+      </div>
+      <div class="kpi-card gray">
+        <div class="kpi-icon gray"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="kpi-label">Site Inspections</div>
+        <div class="kpi-value" id="kpi-inspections">0</div>
+        <div class="kpi-delta">Completed this month</div>
+      </div>
+    </div>
+
+    <!-- Responsibility Area Cards -->
+    <div style="margin-bottom:18px;">
+      <div style="font-size:13px;font-weight:700;color:var(--gray-800);margin-bottom:12px;">Core Responsibility Areas</div>
+      <div class="two-col" style="gap:14px;">
+        <div class="role-card" onclick="showPage('page-cases')" style="cursor:pointer;">
+          <div class="role-card-header">
+            <div class="role-card-icon" style="background:var(--green-50);border:1px solid var(--green-100);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+            </div>
+            <div>
+              <div class="role-card-title">Case Management</div>
+              <div class="role-card-tag">Area 1 — Progress &amp; Follow-Up</div>
+            </div>
+            <span class="badge badge-green" style="margin-left:auto;">Core</span>
+          </div>
+          <div class="role-card-body">
+            <div class="role-card-desc">Manage the progress, follow-up, and reporting of each energy construction case from initiation to completion.</div>
+            <div class="role-task-list">
+              <div class="role-task"><div class="role-task-dot" style="background:var(--green-500);"></div>Track each case milestone and progress status</div>
+              <div class="role-task"><div class="role-task-dot" style="background:var(--green-400);"></div>Follow up on pending action items and deadlines</div>
+              <div class="role-task"><div class="role-task-dot" style="background:var(--green-300);"></div>Prepare progress reports per case</div>
+            </div>
+          </div>
+          <div class="role-card-footer">
+            <div class="role-stat"><div class="role-stat-val" id="rc-cases">0</div><div class="role-stat-label">Cases</div></div>
+            <div class="role-stat"><div class="role-stat-val" id="rc-active">0</div><div class="role-stat-label">Active</div></div>
+            <div class="role-stat"><div class="role-stat-val" id="rc-done">0</div><div class="role-stat-label">Completed</div></div>
+          </div>
+        </div>
+        <div class="role-card" onclick="showPage('page-market')" style="cursor:pointer;">
+          <div class="role-card-header">
+            <div class="role-card-icon" style="background:var(--amber-lt);border:1px solid var(--amber-md);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div>
+              <div class="role-card-title">Market Analysis &amp; Quotation</div>
+              <div class="role-card-tag">Area 2 — Evaluation &amp; Pricing</div>
+            </div>
+            <span class="badge badge-amber" style="margin-left:auto;">Analysis</span>
+          </div>
+          <div class="role-card-body">
+            <div class="role-card-desc">Collect basic case information, conduct market analysis, evaluate solar energy projects, and prepare quotations.</div>
+            <div class="role-task-list">
+              <div class="role-task"><div class="role-task-dot" style="background:var(--amber);"></div>Collect site and client information</div>
+              <div class="role-task"><div class="role-task-dot" style="background:var(--amber);"></div>Conduct market and feasibility analysis</div>
+              <div class="role-task"><div class="role-task-dot" style="background:var(--amber-md);"></div>Prepare competitive quotations</div>
+            </div>
+          </div>
+          <div class="role-card-footer">
+            <div class="role-stat"><div class="role-stat-val" id="rc-evals">0</div><div class="role-stat-label">Evaluations</div></div>
+            <div class="role-stat"><div class="role-stat-val" id="rc-quotes">0</div><div class="role-stat-label">Quotes</div></div>
+            <div class="role-stat"><div class="role-stat-val" id="rc-approved">0</div><div class="role-stat-label">Approved</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="section-card">
+        <div class="section-card-header"><div class="section-card-title">Quick Actions</div><div class="section-card-sub">Jump to key tasks</div></div>
+        <div class="section-card-body" style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-primary" onclick="showPage('page-cases');openModal('modal-add-case')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Case
+          </button>
+          <button class="btn-dark" onclick="showPage('page-market');openModal('modal-add-eval')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Evaluation
+          </button>
+          <button class="btn-secondary" onclick="showPage('page-briefings');openModal('modal-add-briefing')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Briefing
+          </button>
+          <button class="btn-secondary" onclick="showPage('page-inspections');openModal('modal-add-inspection')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Log Inspection
+          </button>
+          <button class="btn-secondary" onclick="showPage('page-reports');openModal('modal-add-report')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Prepare Report
+          </button>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-card-header"><div class="section-card-title">Recent Activity</div><div class="section-card-sub">Latest actions across all modules</div></div>
+        <div id="dash-activity">
+          <div class="list-item">
+            <div class="list-icon gray"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+            <div class="list-body">
+              <div class="list-title">System Ready</div>
+              <div class="list-sub">Quark Energy Group Project Management System initialized</div>
+            </div>
+            <div class="list-meta"><span class="badge badge-green">Live</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CASE MANAGEMENT (Area 1) ═══════════════════ -->
+<div class="page" id="page-cases">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Case Management</div>
+      <div class="page-sub">Area 1 — Manage the progress, follow-up, and reporting of each energy construction case</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-primary" onclick="openModal('modal-add-case')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Case
+      </button>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="section-card">
+      <div class="section-card-header"><div class="section-card-title">Case Tracker</div><div class="section-card-sub">All active and completed energy project cases</div></div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr>
+            <th>Case #</th><th>Project Name</th><th>Client / Developer</th><th>Type</th>
+            <th>Location</th><th>Capacity (kW)</th><th>Start Date</th><th>Progress</th><th>Status</th>
+          </tr></thead>
+          <tbody id="cases-tbody">
+            <tr><td colspan="9" style="text-align:center;color:var(--gray-400);padding:30px;">No cases yet. Click "New Case" to begin.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="editable-area" style="margin-bottom:18px;">
+      <div class="editable-area-label">Progress &amp; Follow-Up Notes</div>
+      <div class="editable-area-hint">Add progress updates, follow-up actions, milestone completions, or any case-related observations here.</div>
+      <ul class="entry-list" id="case-notes-list"></ul>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <input class="form-input" id="case-note-input" placeholder="e.g. Site survey completed for Case QE-0001, civil permit pending…" style="flex:1;">
+        <button class="btn-primary" onclick="addNote('case-notes-list','case-note-input','nc-cases')">Add</button>
+      </div>
+    </div>
+
+    <div class="editable-area">
+      <div class="editable-area-label">Case Reporting Log</div>
+      <div class="editable-area-hint">Record submitted reports, report recipients, and key findings shared with stakeholders.</div>
+      <ul class="entry-list" id="case-report-list"></ul>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <input class="form-input" id="case-report-input" placeholder="e.g. Monthly progress report for QE-0003 submitted to PM on 2026-06-01…" style="flex:1;">
+        <button class="btn-primary" onclick="addNote('case-report-list','case-report-input')">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MARKET ANALYSIS & QUOTATION (Area 2) ═══════════════════ -->
+<div class="page" id="page-market">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Market Analysis &amp; Case Evaluation</div>
+      <div class="page-sub">Area 2 — Collect case information, conduct market analysis, evaluate projects, and prepare quotations</div>
+    </div>
+    <div class="header-actions">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'mkt','info')">Case Information</button>
+        <button class="tab-btn" onclick="switchTab(this,'mkt','eval')">Evaluations</button>
+        <button class="tab-btn" onclick="switchTab(this,'mkt','quotes')">Quotations</button>
+      </div>
+      <button class="btn-primary" onclick="openModal('modal-add-eval')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Evaluation
+      </button>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="tab-content active" id="mkt-info">
+      <div class="section-card">
+        <div class="section-card-header"><div class="section-card-title">Basic Case Information Collection</div><div class="section-card-sub">Initial client and site data gathered for evaluation</div></div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead><tr>
+              <th>Ref #</th><th>Client Name</th><th>Contact</th><th>Site Address</th>
+              <th>Roof/Land Type</th><th>Estimated Area (m²)</th><th>Collected On</th><th>Status</th>
+            </tr></thead>
+            <tbody id="caseinfo-tbody">
+              <tr><td colspan="8" style="text-align:center;color:var(--gray-400);padding:30px;">No case info collected yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="editable-area" style="margin-top:4px;">
+        <div class="editable-area-label">Market Research Notes</div>
+        <div class="editable-area-hint">Add market trends, regulatory updates, feed-in tariff changes, or competitor intelligence relevant to active cases.</div>
+        <ul class="entry-list" id="market-notes-list"></ul>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <input class="form-input" id="market-note-input" placeholder="e.g. New MOEA subsidy announced for rooftop solar Q3 2026…" style="flex:1;">
+          <button class="btn-primary" onclick="addNote('market-notes-list','market-note-input','nc-market')">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="mkt-eval">
+      <div class="section-card">
+        <div class="section-card-header"><div class="section-card-title">Case Evaluation Records</div></div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead><tr>
+              <th>Eval #</th><th>Case / Client</th><th>System Type</th><th>Capacity (kW)</th>
+              <th>Est. Annual Gen. (kWh)</th><th>Payback (yrs)</th><th>IRR (%)</th><th>Evaluator</th><th>Status</th>
+            </tr></thead>
+            <tbody id="eval-tbody">
+              <tr><td colspan="9" style="text-align:center;color:var(--gray-400);padding:30px;">No evaluations yet. Click "Add Evaluation" to begin.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="mkt-quotes">
+      <div class="section-card">
+        <div class="section-card-header"><div class="section-card-title">Quotation Log</div><div style="display:flex;gap:8px;"><button class="btn-primary" onclick="openModal('modal-add-quote')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Quote</button></div></div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead><tr>
+              <th>Quote #</th><th>Client</th><th>System Type</th><th>Capacity</th>
+              <th>Total Price (NTD)</th><th>Valid Until</th><th>Date Issued</th><th>Status</th>
+            </tr></thead>
+            <tbody id="quote-tbody">
+              <tr><td colspan="8" style="text-align:center;color:var(--gray-400);padding:30px;">No quotations yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="editable-area" style="margin-top:4px;">
+        <div class="editable-area-label">Quotation Notes &amp; Follow-ups</div>
+        <div class="editable-area-hint">Log client feedback, revision requests, special pricing conditions, or quotation follow-up actions.</div>
+        <ul class="entry-list" id="quote-notes-list"></ul>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <input class="form-input" id="quote-note-input" placeholder="e.g. Client requested revised quote with battery storage option…" style="flex:1;">
+          <button class="btn-primary" onclick="addNote('quote-notes-list','quote-note-input','nc-market')">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ BUSINESS BRIEFINGS (Area 3) ═══════════════════ -->
+<div class="page" id="page-briefings">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Business Briefings &amp; Visual Presentations</div>
+      <div class="page-sub">Area 3 — Prepare concise and effective business briefings and visual presentations</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-primary" onclick="openModal('modal-add-briefing')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Briefing
+      </button>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="section-card">
+      <div class="section-card-header"><div class="section-card-title">Briefing Records</div><div class="section-card-sub">Prepared business briefings and presentation materials</div></div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr>
+            <th>Brief #</th><th>Title</th><th>Case / Project</th><th>Audience</th>
+            <th>Format</th><th>Prepared By</th><th>Date</th><th>Status</th>
+          </tr></thead>
+          <tbody id="briefings-tbody">
+            <tr><td colspan="8" style="text-align:center;color:var(--gray-400);padding:30px;">No briefings yet. Click "New Briefing" to begin.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="editable-area" style="margin-bottom:18px;">
+      <div class="editable-area-label">Briefing Content &amp; Key Points</div>
+      <div class="editable-area-hint">Add key messages, talking points, visual slide ideas, or client-specific communication notes for each briefing.</div>
+      <ul class="entry-list" id="briefing-notes-list"></ul>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <input class="form-input" id="briefing-note-input" placeholder="e.g. Slide 3: Include 20-year ROI chart for the Tainan agricultural solar case…" style="flex:1;">
+        <button class="btn-primary" onclick="addNote('briefing-notes-list','briefing-note-input','nc-briefings')">Add</button>
+      </div>
+    </div>
+
+    <div class="editable-area">
+      <div class="editable-area-label">Presentation Visual Notes</div>
+      <div class="editable-area-hint">Log visual assets needed, infographic ideas, chart types, or design feedback from stakeholders.</div>
+      <ul class="entry-list" id="visual-notes-list"></ul>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <input class="form-input" id="visual-note-input" placeholder="e.g. Create site layout diagram for QE-0002 using satellite imagery…" style="flex:1;">
+        <button class="btn-primary" onclick="addNote('visual-notes-list','visual-note-input')">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ BUSINESS REPORTS (Area 4) ═══════════════════ -->
+<div class="page" id="page-reports">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Business Reports</div>
+      <div class="page-sub">Area 4 — Regularly prepare and distribute relevant business reports</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-primary" onclick="openModal('modal-add-report')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Prepare Report
+      </button>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="section-card">
+      <div class="section-card-header"><div class="section-card-title">Report Register</div><div class="section-card-sub">All business reports prepared and distributed</div></div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr>
+            <th>Report #</th><th>Report Title</th><th>Type</th><th>Period Covered</th>
+            <th>Prepared By</th><th>Distributed To</th><th>Date</th><th>Status</th>
+          </tr></thead>
+          <tbody id="reports-tbody">
+            <tr><td colspan="8" style="text-align:center;color:var(--gray-400);padding:30px;">No reports yet. Click "Prepare Report" to begin.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="editable-area" style="margin-bottom:18px;">
+      <div class="editable-area-label">Report Key Findings</div>
+      <div class="editable-area-hint">Log important findings, KPIs, or data highlights from each report for quick reference.</div>
+      <ul class="entry-list" id="report-findings-list"></ul>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <input class="form-input" id="report-finding-input" placeholder="e.g. Q2 2026: 3 new rooftop solar cases closed, total 1.2 MW capacity…" style="flex:1;">
+        <button class="btn-primary" onclick="addNote('report-findings-list','report-finding-input','nc-reports')">Add</button>
+      </div>
+    </div>
+
+    <div class="editable-area">
+      <div class="editable-area-label">Report Distribution Notes</div>
+      <div class="editable-area-hint">Track who received each report, feedback received, and any follow-up actions requested.</div>
+      <ul class="entry-list" id="report-dist-list"></ul>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <input class="form-input" id="report-dist-input" placeholder="e.g. Monthly ESG report emailed to CEO and sustainability team on 2026-06-30…" style="flex:1;">
+        <button class="btn-primary" onclick="addNote('report-dist-list','report-dist-input')">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ SITE INSPECTIONS (Area 5) ═══════════════════ -->
+<div class="page" id="page-inspections">
+  <div class="page-header">
+    <div>
+      <div class="page-title">On-Site Project Inspections</div>
+      <div class="page-sub">Area 5 — Conduct and document on-site inspections of energy project sites</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-primary" onclick="openModal('modal-add-inspection')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Log Inspection
+      </button>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="section-card">
+      <div class="section-card-header"><div class="section-card-title">Inspection Log</div><div class="section-card-sub">On-site visits and inspection records</div></div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr>
+            <th>Insp #</th><th>Case / Project</th><th>Site Address</th><th>Inspector</th>
+            <th>Visit Date</th><th>Inspection Type</th><th>Solar Tech</th><th>Finding</th><th>Status</th>
+          </tr></thead>
+          <tbody id="inspections-tbody">
+            <tr><td colspan="9" style="text-align:center;color:var(--gray-400);padding:30px;">No inspections logged yet. Click "Log Inspection" to begin.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="editable-area" style="margin-bottom:18px;">
+      <div class="editable-area-label">Inspection Findings &amp; Observations</div>
+      <div class="editable-area-hint">Document site conditions, structural assessments, shading analysis, grid access, or solar irradiance observations.</div>
+      <ul class="entry-list" id="inspection-notes-list"></ul>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <input class="form-input" id="inspection-note-input" placeholder="e.g. Roof slope 15°, south-facing, no major shading — suitable for 50kW system…" style="flex:1;">
+        <button class="btn-primary" onclick="addNote('inspection-notes-list','inspection-note-input','nc-inspections')">Add</button>
+      </div>
+    </div>
+
+    <div class="editable-area">
+      <div class="editable-area-label">Action Items from Inspections</div>
+      <div class="editable-area-hint">Record action items identified during site visits — engineering concerns, permit requirements, or client follow-ups.</div>
+      <ul class="entry-list" id="inspection-action-list"></ul>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <input class="form-input" id="inspection-action-input" placeholder="e.g. Structural reinforcement required before panel installation — flagged for civil engineer…" style="flex:1;">
+        <button class="btn-primary" onclick="addNote('inspection-action-list','inspection-action-input')">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ABOUT (Company Info) ═══════════════════ -->
+<div class="page" id="page-about">
+  <div class="page-header">
+    <div>
+      <div class="page-title">About Quark Energy Group</div>
+      <div class="page-sub">Company profile, services, and green energy commitment</div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="two-col" style="margin-bottom:18px;">
+      <div class="section-card">
+        <div class="section-card-header"><div class="section-card-title">Company Overview</div></div>
+        <div class="section-card-body">
+          <div class="alert-item" style="margin-bottom:12px;">
+            <div class="alert-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+            <div><div class="alert-title">Large-Scale Energy Construction Developer</div><div class="alert-sub">Integrated renewable energy industry development since establishment</div></div>
+          </div>
+          <p style="font-size:12px;color:var(--gray-600);line-height:1.8;margin-bottom:12px;">Quark Energy Group is primarily a professional large-scale energy construction project developer. As a forward-looking energy group, it integrates renewable energy industry development and provides comprehensive integrated services through a highly professional team.</p>
+          <p style="font-size:12px;color:var(--gray-600);line-height:1.8;">Dedicated to creating a green, smart, safe, and clean environment — fully committed to the development and maintenance of green energy across Taiwan.</p>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-card-header"><div class="section-card-title">Required Skills &amp; Experience</div></div>
+        <div class="section-card-body">
+          <div class="list-item" style="padding:10px 0;">
+            <div class="list-icon" style="background:var(--green-50);border:1px solid var(--green-100);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-600)" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+            <div class="list-body">
+              <div class="list-title">Solar Energy Technology</div>
+              <div class="list-sub">Familiarity with solar energy-related technologies or equivalent relevant experience required</div>
+            </div>
+          </div>
+          <div class="list-item" style="padding:10px 0;border-bottom:none;">
+            <div class="list-icon" style="background:var(--gray-100);border:1px solid var(--gray-200);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gray-600)" stroke-width="2"><path d="M2 20h.01M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/></svg></div>
+            <div class="list-body">
+              <div class="list-title">Engineering Background Preferred</div>
+              <div class="list-sub">Engineering-related experience is preferred for project management and site inspection roles</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-card-header"><div class="section-card-title">Integrated Green Energy Services</div></div>
+      <div class="section-card-body">
+        <div class="three-col">
+          <div class="alert-item">
+            <div class="alert-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <div><div class="alert-title">Site Development</div><div class="alert-sub">Comprehensive site assessment, land acquisition support, and regulatory permitting across Taiwan</div></div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+            <div><div class="alert-title">Civil Engineering</div><div class="alert-sub">Structural design, civil works, and integration of green energy facilities from ground up</div></div>
+          </div>
+          <div class="alert-item amber">
+            <div class="alert-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
+            <div><div class="alert-title">Green Electricity &amp; Certificates</div><div class="alert-sub">Sales of green electricity and renewable energy certificates (RECs) to businesses and individuals</div></div>
+          </div>
+          <div class="alert-item blue">
+            <div class="alert-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+            <div><div class="alert-title">ESG Sustainability Products</div><div class="alert-sub">Implementation of ESG sustainability products aligned with global climate commitments</div></div>
+          </div>
+          <div class="alert-item gray">
+            <div class="alert-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+            <div><div class="alert-title">Project Development</div><div class="alert-sub">End-to-end large-scale energy construction project development with extensive Taiwan experience</div></div>
+          </div>
+          <div class="alert-item gray">
+            <div class="alert-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <div><div class="alert-title">Operation &amp; Maintenance</div><div class="alert-sub">Long-term maintenance and operational safety management of green energy installations</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-card-header"><div class="section-card-title">Contact &amp; Credits</div></div>
+      <div class="section-card-body">
+        <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+          <div style="font-size:13px;color:var(--gray-700);">
+            <strong style="color:var(--gray-900);">Made by:</strong> Bandile Dlamini
+          </div>
+          <div style="font-size:13px;color:var(--gray-700);">
+            <strong style="color:var(--gray-900);">Phone:</strong>
+            <a href="tel:+886900167900" style="color:var(--green-600);font-weight:700;text-decoration:none;">+886 900 167 900</a>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;">
+            <span class="tech-badge">☀️ Solar PV</span>
+            <span class="tech-badge">🌱 ESG</span>
+            <span class="tech-badge">⚡ Green Electricity</span>
+            <span class="tech-badge">🏗️ EPC Projects</span>
+            <span class="tech-badge">📜 RECs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- ═══════════════════ MODALS ═══════════════════ -->
+
+<!-- ADD CASE -->
+<div class="modal-overlay" id="modal-add-case">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Energy Project Case</div>
+      <button class="modal-close" onclick="closeModal('modal-add-case')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" id="cs-name" placeholder="e.g. Tainan Agricultural Solar Phase 1"></div>
+        <div class="form-group"><label class="form-label">Client / Developer</label><input class="form-input" id="cs-client" placeholder="e.g. Green Farm Co."></div>
+        <div class="form-group">
+          <label class="form-label">Project Type</label>
+          <select class="form-select" id="cs-type">
+            <option>Rooftop Solar</option><option>Ground-Mount Solar</option><option>Agricultural Solar (Agrivoltaic)</option><option>Floating Solar</option><option>Wind Energy</option><option>Energy Storage</option><option>Hybrid System</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Site Location</label><input class="form-input" id="cs-location" placeholder="e.g. Tainan City, Shanhua Dist."></div>
+        <div class="form-group"><label class="form-label">Capacity (kW)</label><input class="form-input" id="cs-capacity" placeholder="e.g. 500"></div>
+        <div class="form-group"><label class="form-label">Start Date</label><input class="form-input" id="cs-start" type="date"></div>
+        <div class="form-group"><label class="form-label">Target Completion</label><input class="form-input" id="cs-end" type="date"></div>
+        <div class="form-group"><label class="form-label">Progress (%)</label><input class="form-input" id="cs-progress" type="number" min="0" max="100" placeholder="0"></div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="cs-status">
+            <option>Site Survey</option><option>Permitting</option><option>Design</option><option>Procurement</option><option>Construction</option><option>Commissioning</option><option>Completed</option><option>On Hold</option>
+          </select>
+        </div>
+        <div class="form-group full"><label class="form-label">Notes</label><textarea class="form-textarea" id="cs-notes" placeholder="Case description, key contacts, special requirements…"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-add-case')">Cancel</button>
+      <button class="btn-primary" onclick="saveCase()">Save Case</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD EVALUATION -->
+<div class="modal-overlay" id="modal-add-eval">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add Case Evaluation</div>
+      <button class="modal-close" onclick="closeModal('modal-add-eval')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Case / Client</label><input class="form-input" id="ev-case" placeholder="e.g. QE-0001 / Green Farm Co."></div>
+        <div class="form-group">
+          <label class="form-label">System Type</label>
+          <select class="form-select" id="ev-type">
+            <option>Rooftop Solar</option><option>Ground-Mount Solar</option><option>Agricultural Solar</option><option>Floating Solar</option><option>Hybrid</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Capacity (kW)</label><input class="form-input" id="ev-capacity" placeholder="e.g. 300"></div>
+        <div class="form-group"><label class="form-label">Est. Annual Gen. (kWh)</label><input class="form-input" id="ev-gen" placeholder="e.g. 390,000"></div>
+        <div class="form-group"><label class="form-label">Payback Period (yrs)</label><input class="form-input" id="ev-payback" placeholder="e.g. 8.5"></div>
+        <div class="form-group"><label class="form-label">IRR (%)</label><input class="form-input" id="ev-irr" placeholder="e.g. 12.3"></div>
+        <div class="form-group"><label class="form-label">Evaluator</label><input class="form-input" id="ev-evaluator" placeholder="Name of evaluator"></div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="ev-status">
+            <option>Draft</option><option>Under Review</option><option>Approved</option><option>Rejected</option><option>Revised</option>
+          </select>
+        </div>
+        <div class="form-group full"><label class="form-label">Evaluation Summary</label><textarea class="form-textarea" id="ev-notes" placeholder="Key findings, assumptions, risk factors…"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('modal-add-eval')">Cancel</button>
+      <button class="btn-primary" onclick="saveEval()">Save Evaluation</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CASE INFO -->
+<div class="modal-overlay" id="modal-add-caseinfo">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Collect Basic Case Information</div>
+      <button class="modal-close" onclick="closeModal('modal-add-caseinfo')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Client Name</label><input class="form-input" id="ci-client" placeholder="e.g. Sunrise Agriculture Ltd"></div>
+        <div class="form-group"><label class="form-label">Contact Person</label><input class="form-input" id="ci-contact" placeholder="e.g. Mr. Chen Wei-Ming"></div>
+        <div class="form-group"><label class="form-label">Phone / Email</label><input class="form-input" id="ci-phone" placeholder="e.g. 0912-345-678"></div>
+        <div class="form-group full"><label class="form-label">Site Address</label><input class="form-input" id="ci-address" placeholder="Full address of the proposed installation site"></div>
+        <div class="form-group">
+          <label class="form-label">Roof / Land Type</label>
+          <select class="form-select" id="ci-rooftype">
+            <option>Flat Roof (RC)</option><option>Pitched Roof (Steel)</option><option>Agricultural Land</option><option>Fish Pond</option><option>Open Ground</option><option>Parking Canopy</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Est. Area (m²)</label><input class="form-input" id="ci-area" placeholder="e
